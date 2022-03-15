@@ -22,7 +22,7 @@
 
 ### Порядок прохождения курса
 
-Глава 1: [Изучение Концепций Блокчейна](#изучение-концепций-блокчейна) -> [Язык программирования Cadence](#язык-программирования-cadence) 
+Глава 1: [Изучение Концепций Блокчейна](#изучение-концепций-блокчейна) -> [Язык программирования Cadence](#язык-программирования-cadence)
 
 Глава 2: [Основные сведения](#основные-сведения) -> [Переменные](#переменные) & [Функции](#функции) & [Контракты](#контракты) -> [Скрипты](#скрипты) & [Транзакции](#транзакции) & [Аккаунты](#аккаунты) -> [Массивы](#массивы) & [Словари](#словари) & [Опционалы](#опционалы) -> [Структуры](#структуры)
 
@@ -127,11 +127,11 @@ var value: ToType = dict[someKey]! // Force-Unwrap
 ```swift
 // объявление
 pub struct StructName {
-  pub let someVar1: String
-  pub let someVar2: Int
-  ...
-	
-  init(...) { ... }
+    pub let someVar1: String
+    pub let someVar2: Int
+    ...
+
+    init(...) { ... }
 }
 
 // использование
@@ -153,17 +153,17 @@ log(strct.someVar1)
 
 ```swift
 pub contract Test {
-  pub resource Greeting {
-    pub let message: String
-    init() {
-      self.message = "Hello, Mars!"
+    pub resource Greeting {
+        pub let message: String
+        init() {
+            self.message = "Hello, Mars!"
+        }
     }
-  }
 
-  pub fun createGreeting(): @Greeting {
-    let myGreeting <- create Greeting()
-      return <- myGreeting
-  }
+    pub fun createGreeting(): @Greeting {
+        let myGreeting <- create Greeting()
+        return <- myGreeting
+    }
 }
 ```
 
@@ -175,31 +175,31 @@ pub contract Test {
 
 ```swift
 pub contract Test {
-  // объявление ресурса
-  pub resource Greeting {
-    pub let message: String
-    init() {
-      self.message = "Hello, Mars!"
+    // объявление ресурса
+    pub resource Greeting {
+        pub let message: String
+        init() {
+            self.message = "Hello, Mars!"
+        }
     }
-  }
-	
-  // объявление массива ресурсов
-  pub var arrayOfGreetings: @[Greeting]
-	
-  // добавление в массив
-  pub fun addGreeting(greeting: @Greeting) {
-    self.arrayOfGreetings.append(<- greeting)
-  }
-	
-  // извлечение из массива
-  pub fun removeGreeting(index: Int): @Greeting {
-    return <- self.arrayOfGreetings.remove(at: index)
-  }
-	
-  init() {
-    // инициализация пустого массива ресурсов
-    self.arrayOfGreetings <- []
-  }
+
+    // объявление массива ресурсов
+    pub var arrayOfGreetings: @[Greeting]
+
+    // добавление в массив
+    pub fun addGreeting(greeting: @Greeting) {
+        self.arrayOfGreetings.append(<- greeting)
+    }
+
+    // извлечение из массива
+    pub fun removeGreeting(index: Int): @Greeting {
+        return <- self.arrayOfGreetings.remove(at: index)
+    }
+
+    init() {
+        // инициализация пустого массива ресурсов
+        self.arrayOfGreetings <- []
+    }
 }
 ```
 
@@ -207,78 +207,80 @@ pub contract Test {
 
 ```swift
 pub contract Test {
-  // объявление ресурса
-  pub resource Greeting {
-    pub let message: String
-    init() {
-      self.message = "Hello, Mars!"
+    // объявление ресурса
+    pub resource Greeting {
+        pub let message: String
+        init() {
+            self.message = "Hello, Mars!"
+        }
     }
-  }
-	
-  // объявление словаря, содержащего ресурсы
-  pub var dictionaryOfGreetings: @{String: Greeting}
-  
-  // добавление в словарь | вариант 1
-  pub fun addGreeting(greeting: @Greeting) {
-    let key = greeting.message
-    self.dictionaryOfGreetings[key] <-! greeting
-	
-  // добавление в словарь | вариант 2
-  pub fun addGreeting(greeting: @Greeting) {
-    let key = greeting.message
-        
-    let oldGreeting <- self.dictionaryOfGreetings[key] <- greeting
-    destroy oldGreeting
-  }
-	 
-  // извлечение из словаря
-  pub fun removeGreeting(key: String): @Greeting {
-    let greeting <- self.dictionaryOfGreetings.remove(key: key) ?? panic("Could not find the greeting!")
-    // или используя оператор force-unwrap
-    let greeting <- self.dictionaryOfGreetings.remove(key: key)!
-    return <- greeting
-  }
-	
-  init() {
-    // инициализация пустого словаря ресурсов
-    self.dictionaryOfGreetings <- {}
-  }
+
+    // объявление словаря, содержащего ресурсы
+    pub var dictionaryOfGreetings: @{String: Greeting}
+
+    // добавление в словарь | вариант 1
+    pub fun addGreeting(greeting: @Greeting) {
+        let key = greeting.message
+        self.dictionaryOfGreetings[key] <-! greeting
+    }
+
+    // добавление в словарь | вариант 2
+    pub fun addGreeting(greeting: @Greeting) {
+        let key = greeting.message
+        let oldGreeting <- self.dictionaryOfGreetings[key] <- greeting
+        destroy oldGreeting
+    }
+
+    // извлечение из словаря
+    pub fun removeGreeting(key: String): @Greeting {
+        let greeting <- self.dictionaryOfGreetings.remove(key: key) ?? panic("Could not find the greeting!")
+        // или используя оператор force-unwrap
+        let greeting <- self.dictionaryOfGreetings.remove(key: key)!
+        return <- greeting
+    }
+
+    init() {
+        // инициализация пустого словаря ресурсов
+        self.dictionaryOfGreetings <- {}
+    }
 }
 ```
 
 В первом варианте добавления используется оператор принудительного перемещения `<-!`. Работает он так: если до добавления в словаре не было пары соответствующей ключу `key`, то по этому ключу будет записано новое значение, иначе произойдет ошибка.
+
 А во втором варианте добавления используется оператор смещения `<- target <-`. В данном случае значение, которое могло потенциально находиться в словаре, перемещается в переменную `oldGreeting`, а затем туда записывается новое значение `greeting`.
 
 ## Ссылки
 
-Ссылки - механизм обращения и обработки данных. 
+Ссылки - механизм обращения и обработки данных.
+
 Ссылки позволяют определить идентификатор (переменную), который будет ссылаться на существующие данные, например, на поле структуры или ресурса. Это позволит не перемещать ресурс, а орудовать только ссылкой на интересующие данные.
 
 ```swift
 pub contract Test {
-  // объявление ресурса
-  pub resource Greeting {
-    pub let language: String
-    init(_language: String) {
-      self.language = _language
+    // объявление ресурса
+    pub resource Greeting {
+        pub let language: String
+        init(_language: String) {
+            self.language = _language
+        }
     }
-  }
-	
-  // словарь ресурсов
-  pub var dictionaryOfGreetings: @{String: Greeting}
-	
-  // получение ссылки на элемент словаря
-  pub fun getReference(key: String): &Greeting {
-    return &self.dictionaryOfGreetings[key] as &Greeting
-  }
 
-  init() {
-    // инициализация словаря
-    self.dictionaryOfGreetings <- {
-      "Hello!": <- create Greeting(_language: "English"), 
-      "Bonjour!": <- create Greeting(_language: "French")
+    // словарь ресурсов
+    pub var dictionaryOfGreetings: @{String: Greeting}
+
+    // получение ссылки на элемент словаря
+    pub fun getReference(key: String): &Greeting {
+        return &self.dictionaryOfGreetings[key] as &Greeting
     }
-  }
+
+    init() {
+        // инициализация словаря
+        self.dictionaryOfGreetings <- {
+            "Hello!": <- create Greeting(_language: "English"),
+            "Bonjour!": <- create Greeting(_language: "French")
+        }
+    }
 }
 ```
 
@@ -286,61 +288,63 @@ pub contract Test {
 
 ## Интерфейсы
 
-Интерфейсы - механизм взаимодействия с объектами. С их помощью можно унифицировать некоторые детали реализации так, чтобы с разными объектами можно было работать одинаково. 
+Интерфейсы - механизм взаимодействия с объектами. 
+
+С их помощью можно унифицировать некоторые детали реализации так, чтобы с разными объектами можно было работать одинаково.
+
 ❗ Интерфейсы задают свод правил, которым должны удовлетворять объекты, реализующие этот интерфейс.
 
 ```swift
 pub contract Stuff {
-	
-  // объявление интерфейса для ресурса
-  pub resource interface ITest {
-    pub let name: String
-  }
-
-  // объявление ресурса, реализующего интерфейс ITest
-  pub resource Test: ITest {
-    pub let name: String
-    pub let number: Int
-    init() {
-      self.name = "Spongebob"
-      self.number = 1
+    // объявление интерфейса для ресурса
+    pub resource interface ITest {
+        pub let name: String
     }
-  }
 
-  // обращение к полю без интерфейса
-  pub fun noInterface() {
-    let test: @Test <- create Test()
-    log(test.number) // 1
-    destroy test
-	}
-	
-  // обращение к полю через интерфейс
-  pub fun yesInterface() {
-    let test: @Test{ITest} <- create Test()
-    log(test.number) // Ошибка, т.к. ITest ничего не знает о поле number ресурса Test
-    destroy test
-  }
+    // объявление ресурса, реализующего интерфейс ITest
+    pub resource Test: ITest {
+        pub let name: String
+        pub let number: Int
+        init() {
+            self.name = "Spongebob"
+            self.number = 1
+        }
+    }
+
+    // обращение к полю без интерфейса
+    pub fun noInterface() {
+        let test: @Test <- create Test()
+        log(test.number) // 1
+        destroy test
+    }
+
+    // обращение к полю через интерфейс
+    pub fun yesInterface() {
+        let test: @Test{ITest} <- create Test()
+        log(test.number) // Ошибка, т.к. ITest ничего не знает о поле number ресурса Test
+        destroy test
+    }
 }
 ```
 
-Хорошей практикой считается для интерфейсов указывать префикс "I".
+💡 Хорошей практикой считается для интерфейсов указывать префикс "I".
 
 ## Контроль доступа
 
- - `pub(set)`
-	Зона чтения: Везде
+ - `pub(set)`<br>
+	Зона чтения: Везде<br>
 	Зона записи: Везде
- - `pub` / `access(all)`
-	Зона чтения: Везде
+ - `pub` / `access(all)`<br>
+	Зона чтения: Везде<br>
 	Зона записи: Текущая и вложенные
- - `access(account)`
-	Зона чтения: Текущая, вложенные и все зоны контрактов, связанных с текущим аккаунтом
+ - `access(account)`<br>
+	Зона чтения: Текущая, вложенные и все зоны контрактов, связанных с текущим аккаунтом<br>
 	Зона записи: Текущая и вложенные
- - `access(contract)`
-	Зона чтения: Текущая, вложенные и текущий контракт
+ - `access(contract)`<br>
+	Зона чтения: Текущая, вложенные и текущий контракт<br>
 	Зона записи: Текущая и вложенные
- - `priv` / `access(self)`
-	Зона чтения: Текущая и вложенные
+ - `priv` / `access(self)`<br>
+	Зона чтения: Текущая и вложенные<br>
 	Зона записи: Текущая и вложенные
 
 [Подробнее](https://docs.onflow.org/cadence/language/access-control/)
@@ -350,9 +354,9 @@ pub contract Stuff {
 Позволяют читать данные из блокчейна. Не требуют оплаты комиссий.
 
 ```swift
-pub fun main(): ReturnType {
-  ...
-  return something // не обязательно
+pub fun main(): Type {
+    ...
+    return something // не обязательно
 }
 ```
 
@@ -362,8 +366,8 @@ pub fun main(): ReturnType {
 
 ```swift
 transaction(параметры) {
-  prepare(signer: AuthAccount) { ... }
-  execute { ... }
+    prepare(signer: AuthAccount) { ... }
+    execute { ... }
 }
 ```
 
@@ -371,29 +375,30 @@ transaction(параметры) {
  - `prepare` - стадия подготовки. Позволяет получить доступ к информации об аккаунте (с помощью параметра `signer: AuthAccount`) и сделать некоторые проверки.
  - `execute` - основная стадия. Используется для вызова функций и изменения данных в блокчейне.
 
-Технически, всё можно написать в секции `prepare`, но рекомендуется разделять логику.
+💡 Технически, всё можно написать в секции `prepare`, но рекомендуется разделять логику.
 
 ## Аккаунты
 
 Аккаунты в блокчейне Flow в отличии от Ethereum хранят свои данные. То есть, например, вместо того чтобы хранить адреса владельцев в контракте NFT, как это делается в Ethereum, сами аккаунты хранят информацию о том, что они владеют тем, или иным NFT.
-Для доступа к информации аккаунта используют два типа: `PublicAccount` и `AuthAccount`. Подробнее читать [тут](https://docs.onflow.org/cadence/language/accounts/).
+Для доступа к информации аккаунта используют два типа: `PublicAccount` и `AuthAccount`. 
+
+Подробнее читать [тут](https://docs.onflow.org/cadence/language/accounts/).
 
 ## Контракты
 
 ```swift
 [модификатор доступа] contract [имя контракта] {
-	
-  // переменные
-  pub var someVar: Type 
-	
-  // конструктор
-  init() {
-    self.someVar = ...
-    ...
-  }
-	
-  // функции
-  pub fun someFunc(params) { ... }
+    // переменные
+    pub var someVar: Type
+
+    // конструктор
+    init() {
+        self.someVar = ...
+        ...
+    }
+
+    // функции
+    pub fun someFunc(params) { ... }
 }
 ```
 
@@ -403,6 +408,7 @@ transaction(параметры) {
 # Практика
 
 ## Глава 2, День 1
+
 1. Развернуть контракт с именем "JacobTucker" по адресу `0x03`:
     - контракт должен содержать константу `is` типа `String`;
     - проинициализировать константу строкой "the best".
@@ -412,7 +418,7 @@ transaction(параметры) {
 
 ## Глава 2, День 2
 
-1. Создать контракт, содержащий: 
+1. Создать контракт, содержащий:
 	 - переменную `myNumber` типа `Int` (проинициализировать нулём);
 	 - функцию `updateMyNumber`, которая принимает на вход параметр `newNumber` типа `Int` и присваивает значение к `myNumber`.
 2. Написать скрипт для проверки значения `myNumber`.
@@ -429,13 +435,13 @@ transaction(параметры) {
 	 - Почему мы получаем эту ошибку?
 	 - Как исправить эту ошибку?
 
-  ```swift
-  pub fun main(): String {
-    let thing: {Address: String} = { 0x01: "One", 0x02: "Two", 0x03: "Three" }
-		
-    return thing[0x03] // <- Mismatched types. Expect String, got String?
-  }
-  ```
+    ```swift
+    pub fun main(): String {
+        let thing: {Address: String} = { 0x01: "One", 0x02: "Two", 0x03: "Three" }
+
+        return thing[0x03] // <- Mismatched types. Expect String, got String?
+    }
+    ```
 
 [Flow Playground](https://play.onflow.org/d5b840bf-2374-4779-82d8-c7ec9c86780f?type=script&id=b4d91a5b-7317-4359-8a1c-f5e335ed685c&storage=none)
 
@@ -455,18 +461,18 @@ transaction(параметры) {
 
 ```swift
 pub contract Test {
-  // в объявлении ресурса ошибок нет
-  pub resource Jacob {
-    pub let rocks: Bool
-    init() {
-      self.rocks = true
+    // в объявлении ресурса ошибок нет
+    pub resource Jacob {
+        pub let rocks: Bool
+        init() {
+            self.rocks = true
+        }
     }
-  }
 
-  pub fun createJacob(): Jacob { // здесь одна ошибка
-    let myJacob = Jacob() // две здесь
-    return myJacob // и ещё одна здесь
-  }
+    pub fun createJacob(): Jacob { // здесь одна ошибка
+        let myJacob = Jacob() // две здесь
+        return myJacob // и ещё одна здесь
+    }
 }
 ```
 
@@ -489,116 +495,108 @@ pub contract Test {
 	 - две функции.
 
 	Первая функция должна обращаться к полям ресурса без интерфейса, а вторая - через интерфейс. Показать, к каким полям стало невозможно обратиться во втором случае.
-	
+
 2. Исправить ошибки
 
-  ```swift
-  pub contract Stuff {
-    pub struct interface ITest {
-      pub var greeting: String
-      pub var favouriteFruit: String
-    }
-    
-    // ERROR:
-    // `structure Stuff.Test does not conform
-    // to structure interface Stuff.ITest`
-    pub struct Test: ITest {
-      pub var greeting: String
+    ```swift
+    pub contract Stuff {
+        pub struct interface ITest {
+            pub var greeting: String
+            pub var favouriteFruit: String
+        }
 
-      pub fun changeGreeting(newGreeting: String): String {
-        self.greeting = newGreeting
-        return self.greeting // returns the new greeting
-      }
-      
-      init() {
-        self.greeting = "Hello!"
-      }
-    }
+        // ERROR:`structure Stuff.Test does not 
+        // conform to structure interface Stuff.ITest`
+        pub struct Test: ITest {
+            pub var greeting: String
 
-    pub fun fixThis() {
-      let test: Test{ITest} = Test()
-      let newGreeting = test.changeGreeting(newGreeting: "Bonjour!") // ERROR HERE: `member of restricted type is not accessible: changeGreeting`
-      log(newGreeting)
+            pub fun changeGreeting(newGreeting: String): String {
+                self.greeting = newGreeting
+                return self.greeting // returns the new greeting
+            }
+
+            init() {
+                self.greeting = "Hello!"
+            }
+        }
+
+        pub fun fixThis() {
+            let test: Test{ITest} = Test()
+
+            // ERROR HERE: `member of restricted type is not accessible: changeGreeting`
+            let newGreeting = test.changeGreeting(newGreeting: "Bonjour!")
+
+            log(newGreeting)
+        }
     }
-  }
-  ```
+    ```
 
 [Flow Playground](https://play.onflow.org/6ff14320-0de1-4d19-8861-78e170448848?type=account&id=034dfea5-e3bb-4e41-a071-c308110202b0&storage=none)
 
 ## Глава 3, День 5
 
-Для каждой из четырёх зон написать: 
+Для каждой из четырёх зон написать:
 1. какие из переменные из `a`, `b`, `c` и `d` могут быть там прочитаны;
 2. какие из переменные из `a`, `b`, `c` и `d` могут быть там изменены;
 3. какие из функций `publicFunc`, `contractFunc` и `privateFunc` могут быть там вызваны.
 
 ```swift
 access(all) contract SomeContract {
-  pub var testStruct: SomeStruct
+    pub var testStruct: SomeStruct
 
-  pub struct SomeStruct {
+    pub struct SomeStruct {
+        // 4 Variables
+        pub(set)         var a: String
+        pub              var b: String
+        access(contract) var c: String
+        access(self)     var d: String
 
-    //
-    // 4 Variables
-    //
-    pub(set) var a: String
+        // 3 Functions
+        pub              fun publicFunc() {}
+        access(contract) fun contractFunc() {}
+        access(self)     fun privateFunc() {}
 
-    pub var b: String
+        pub fun structFunc() {
+            /**************/
+            /*** AREA 1 ***/
+            /**************/
+        }
 
-    access(contract) var c: String
+        init() {
+            self.a = "a"
+            self.b = "b"
+            self.c = "c"
+            self.d = "d"
+        }
+    }
 
-    access(self) var d: String
+    pub resource SomeResource {
+        pub var e: Int
 
-    //
-    // 3 Functions
-    //
-    pub fun publicFunc() {}
+        pub fun resourceFunc() {
+            /**************/
+            /*** AREA 2 ***/
+            /**************/
+        }
 
-    access(contract) fun contractFunc() {}
+        init() {
+            self.e = 17
+        }
+    }
 
-    access(self) fun privateFunc() {}
+    pub fun createSomeResource(): @SomeResource {
+        return <- create SomeResource()
+    }
 
-    pub fun structFunc() {
-      /**************/
-      /*** AREA 1 ***/
-      /**************/
+    pub fun questsAreFun() {
+        /**************/
+        /*** AREA 3 ****/
+        /**************/
     }
 
     init() {
-      self.a = "a"
-      self.b = "b"
-      self.c = "c"
-      self.d = "d"
+        self.testStruct = SomeStruct()
     }
-  }
-
-  pub resource SomeResource {
-    pub var e: Int
-
-    pub fun resourceFunc() {
-      /**************/
-      /*** AREA 2 ***/
-      /**************/
-    }
-
-    init() {
-      self.e = 17
-    }
-  }
-
-  pub fun createSomeResource(): @SomeResource {
-    return <- create SomeResource()
-  }
-
-  pub fun questsAreFun() {
-    /**************/
-    /*** AREA 3 ****/
-    /**************/
-  }
-
-  init() {
-    self.testStruct = SomeStruct()
-  }
 }
 ```
 
@@ -606,9 +604,9 @@ access(all) contract SomeContract {
 import SomeContract from 0x01
 
 pub fun main() {
-  /**************/
-  /*** AREA 4 ***/
-  /**************/
+    /**************/
+    /*** AREA 4 ***/
+    /**************/
 }
 ```
 
@@ -618,9 +616,3 @@ pub fun main() {
 
  - [Оригинальный курс](https://github.com/jacob-tucker/Flow-Zero-to-Jacob)
  - [Документация языка Cadence](https://docs.onflow.org/cadence/language/)
-
-
-
-
-
-
