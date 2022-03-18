@@ -174,7 +174,7 @@ pub contract Test {
 
 Тип ресура имеет префикс `@`. Например, типом ресурса  `pub resource Jacob {...}` является  `@Jakob`.
 
-❗ Ресурсы объявляются/создаются/уничтожаются только внутри одного контракта.
+❗ Ресурсы объявляются и создаются только внутри контракта.
 
 ### Ресурсы в массивах
 
@@ -252,7 +252,7 @@ pub contract Test {
 }
 ```
 
-В первом варианте добавления используется оператор принудительного перемещения `<-!`. Работает он так: если до добавления в словаре не было пары соответствующей ключу `key`, то по этому ключу будет записано новое значение, иначе произойдет ошибка.
+В первом варианте добавления используется оператор принудительного перемещения `<-!`.<br>Работает он так: если до добавления в словаре не было пары соответствующей ключу `key`, то по этому ключу будет записано значение, иначе произойдет ошибка.
 
 А во втором варианте добавления используется оператор смещения `<- target <-`. В данном случае значение, которое могло потенциально находиться в словаре, перемещается в переменную `oldGreeting`, а затем туда записывается новое значение `greeting`.
 
@@ -370,7 +370,7 @@ pub fun main(): Type {
 
 ## Транзакции
 
-Позволяют менять данные. Требуют оплаты комиссий.
+Позволяют изменять данные. Требуют оплаты комиссий.
 
 ```swift
 transaction(параметры) {
@@ -393,7 +393,7 @@ transaction(параметры) {
 
 Забегая вперёд скажу, что аккаунты хранят:
 
- - Код [контрактов](#контракты), развернутых под этим аккаунтом (контрактов может быть несколько)
+ - Код контрактов, развернутых под этим аккаунтом (контрактов может быть несколько)
  - [Хранилище аккаунта](#хранилище-аккаунта)
 
 Также Jacob сделал очень хорошую наглядную [картинку](https://github.com/jacob-tucker/Flow-Zero-to-Jacob/tree/main/chapter4.0/day1#what-lives-in-an-account).
@@ -471,7 +471,7 @@ transaction(параметры) {
     - проинициализировать константу строкой "the best".
 2. Убедиться, что константа `is` действительно имеет значение "the best".
 
-[Flow Playground](https://play.onflow.org/81e22fae-ed74-4c83-b03c-6c073e49f313?type=script&id=920766ab-1890-4618-9f81-aab06717eafa&storage=none)
+[Flow Playground](https://play.onflow.org/81e22fae-ed74-4c83-b03c-6c073e49f313)
 
 ### Глава 2, День 2
 
@@ -481,7 +481,7 @@ transaction(параметры) {
 2. Написать скрипт для проверки значения `myNumber`.
 3. Создать транзакцию с параметром `myNewNumber`, которая вызывает функцию `updateMyNumber`, и убедиться, что число действительно изменилось, запустив снова скрипт.
 
-[Flow Playground](https://play.onflow.org/b60be3e3-10df-473d-90d6-f5b0df0a182f?type=tx&id=94e1736a-d30e-4b79-bc12-2f2fc52a1d9d&storage=none)
+[Flow Playground](https://play.onflow.org/b60be3e3-10df-473d-90d6-f5b0df0a182f)
 
 ### Глава 2, День 3
 
@@ -500,7 +500,7 @@ transaction(параметры) {
     }
     ```
 
-[Flow Playground](https://play.onflow.org/d5b840bf-2374-4779-82d8-c7ec9c86780f?type=script&id=b4d91a5b-7317-4359-8a1c-f5e335ed685c&storage=none)
+[Flow Playground](https://play.onflow.org/d5b840bf-2374-4779-82d8-c7ec9c86780f)
 
 ### Глава 2, День 4
 
@@ -510,7 +510,7 @@ transaction(параметры) {
 4. Написать транзакцию, которая вызывает функцию из пункта 3.
 5. Создать скрипт для чтения массива/словаря структур.
 
-[Flow Playground](https://play.onflow.org/21078363-d042-46df-b981-5112593d8846?type=account&id=23e25429-0751-4373-844a-13e84822e575&storage=none)
+[Flow Playground](https://play.onflow.org/21078363-d042-46df-b981-5112593d8846)
 
 ### Глава 3, День 1
 
@@ -533,7 +533,7 @@ pub contract Test {
 }
 ```
 
-[Flow Playground](https://play.onflow.org/77d2e459-2bcc-4476-bf88-9a88e2b49bf1?type=account&id=b63f751e-71da-4e37-98c7-06e2dc9d3fb4&storage=none)
+[Flow Playground](https://play.onflow.org/77d2e459-2bcc-4476-bf88-9a88e2b49bf1)
 
 ### Глава 3, День 2-3
 
@@ -541,7 +541,7 @@ pub contract Test {
 2. Для массива и словаря создать по паре функций: добавления и удаления ресурса.
 3. Написать скрипт для чтения массива или словаря ресурсов.
 
-[Flow Playground](https://play.onflow.org/1128961f-c703-4586-9fe4-8c5c2ff1549c?type=account&id=272ced8f-6145-4152-ab97-63a9ec7b02b3&storage=none)
+[Flow Playground](https://play.onflow.org/1128961f-c703-4586-9fe4-8c5c2ff1549c)
 
 ### Глава 3, День 4
 
@@ -588,7 +588,7 @@ pub contract Test {
     }
     ```
 
-[Flow Playground](https://play.onflow.org/6ff14320-0de1-4d19-8861-78e170448848?type=account&id=034dfea5-e3bb-4e41-a071-c308110202b0&storage=none)
+[Flow Playground](https://play.onflow.org/6ff14320-0de1-4d19-8861-78e170448848)
 
 ### Глава 3, День 5
 
@@ -667,7 +667,7 @@ pub fun main() {
 }
 ```
 
-[Flow Playground](https://play.onflow.org/3fc21783-1472-4174-bde7-ab778896fb4e?type=script&id=b103c6d2-f0a4-41ec-ba62-203df278237c&storage=none)
+[Flow Playground](https://play.onflow.org/3fc21783-1472-4174-bde7-ab778896fb4e)
 
 ### Глава 4, День 1
 
