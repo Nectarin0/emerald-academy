@@ -895,7 +895,7 @@ transaction() {
     ```swift
     import CryptoPoops from 0x01
 
-    // транзакция имеет параметр - адрес получателя
+    // транзакция имеет параметр: адрес получателя
     transaction(recipient: Address) {
         prepare(otherPerson: AuthAccount) {
             // получаем ссылку на публичный интерфейс чужой коллекции
@@ -946,11 +946,152 @@ transaction() {
     }
     ```
 
-Вот мы и сделали наш NFT смарт-контракт. Как обычно весь код тут:
-
+Вот мы и сделали наш NFT смарт-контракт. Как обычно весь код тут:<br>
 [Flow Playground](https://play.onflow.org/4a49bf7b-2b3a-4f13-8f9f-9bcd5b7669ee)
 
-В следующей части мы разработаем логику минтинга NFT, так как на текущий момент минтить токены может каждый, что не очень правильно.
+В следующей части мы разработаем логику минтинга NFT, так как на текущий момент минтить токены может каждый, что не очень правильно, а также добавим возможность удобно читать информацию о NFT.
+
+### Глава 4, День 4
+
+Напишем более продвинутую транзакцию для нашего NFT смарт-контракта, а именно транзакцию перевода NFT от одного человека к другому.
+
+```swift
+import CryptoPoops from 0x01
+
+// транзакция имеет два параметра: id - номер NFT отправителя, recipient - получатель NFT
+transaction(id: UInt64, recipient: Address) {
+    prepare(signer: AuthAccount) {
+        // получаем ссылку на коллекцию отправителя
+        let signersCollection = signer.borrow<&CryptoPoops.Collection>(from: /storage/MyCollection)
+            ?? panic("Signer does not have a CryptoPoops Collection")
+
+        // получаем ссылку на коллекцию
+        let recipientsCollection = getAccount(recipient)
+            .getCapability(/public/MyCollection)
+            .borrow<&CryptoPoops.Collection{CryptoPoops.CollectionPublic}>()
+            ?? panic("The recipient does not have a CryptoPoops Collection.")
+
+        // берём NFT из коллекции отправителя
+        let nft <- signersCollection.withdraw(withdrawID: id)
+
+        // делаем депозит в коллекцию получателя
+        recipientsCollection.deposit(token: <- nft)
+    }
+}
+```
+
+Теперь займёмся механикой минтинга NFT. Напомню, что сейчас минтить может каждый, и чтобы решить эту проблему, предлагаю начать с ресурса, который бы минтил NFT.
+
+```swift
+pub contract CryptoPoops {
+    ...
+
+    // этот Minter будет позволять своим владельцам минтить NFT 
+    pub resource Minter {
+        // определение этой функции мы переместили из контракта внутрь ресурса
+        pub fun createNFT(): @NFT {
+            return <- create NFT()
+        }
+    }
+
+    init() {
+        self.totalSupply = 0
+
+        // при развёртывании контракта Minter сохранится на аккаунт владельца
+        self.account.save(<- create Minter(), to: /storage/Minter)
+    }
+}
+```
+
+Попробуем заминтить кому-нибудь NFT
+
+```swift
+import CryptoPoops from 0x01
+
+transaction(recipient: Address) {
+    prepare(signer: AuthAccount) {
+        // получаем ссылку на Minter
+        let minter = signer.borrow<&CryptoPoops.Minter>(from: /storage/Minter)
+            ?? panic("This signer is not the one who deployed the contract.")
+
+        // получаем ссылку на коллекцию получателя
+        let recipientsCollection = getAccount(recipient)
+            .getCapability(/public/MyCollection)
+            .borrow<&CryptoPoops.Collection{CryptoPoops.CollectionPublic}>()
+            ?? panic("The recipient does not have a Collection.")
+
+        // создаём NFT с помощью Minter'а
+        let nft <- minter.createNFT()
+
+        // делаем депозит в коллекцию получателя
+        recipientsCollection.deposit(token: <- nft)
+    }
+}
+```
+
+Добавим последнюю удобную функцию получения ссылки на NFT.
+
+```swift
+pub contract CryptoPoops {
+    ...
+
+    pub resource NFT {
+        pub let id: UInt64
+
+        // для примера мы добавили некоторые метаданные
+        pub let name: String
+        pub let favouriteFood: String
+        pub let luckyNumber: Int
+
+        ...
+    }
+
+    pub resource interface CollectionPublic {
+        ...
+
+        // делаем функцию получения ссылки публичной
+        pub fun borrowNFT(id: UInt64): &NFT
+    }
+
+    pub resource Collection: CollectionPublic {
+        pub var ownedNFTs: @{UInt64: NFT}
+
+        ...
+
+        // реализуем функцию
+        pub fun borrowNFT(id: UInt64): &NFT {
+            return &self.ownedNFTs[id] as &NFT
+        }
+    }
+
+    ...
+}
+```
+
+Теперь мы с лёгкостью можем читать метаданные в скриптах.
+
+```swift
+import CryptoPoops from 0x01
+
+pub fun main(address: Address, id: id) {
+    // как обычно получаем ссылку на коллекцию
+    let publicCollection = getAccount(address)
+        .getCapability(/public/MyCollection)
+        .borrow<&CryptoPoops.Collection{CryptoPoops.CollectionPublic}>()
+        ?? panic("The address does not have a Collection.")
+
+    // с помощью новой функции получаем ссылку на NFT
+    let nftRef: &CryptoPoops.NFT = publicCollection.borrowNFT(id: id)
+
+    // читаем метаданные
+    log(nftRef.name)
+    log(nftRef.favouriteFood)
+    log(nftRef.luckyNumber)
+}
+```
+
+Весь сегодняшний код и даже больше здесь:<br>
+[Flow Playground](https://play.onflow.org/66ee83c8-7b84-4537-8244-463c7fb66a3e)
 
 # Литература
 
