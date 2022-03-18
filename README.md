@@ -19,6 +19,8 @@
    - [Хранилище аккаунта](#хранилище-аккаунта)
    - [Контракты](#контракты)
  - [Практика](#практика)
+   - [Квесты](#квесты)
+   - [Создаём собственный NFT смарт-контракт](#создаём-собственный-nft-смарт-контракт)
  - [Литература](#литература)
 
 ### Порядок прохождения курса
@@ -460,7 +462,9 @@ transaction(параметры) {
 
 # Практика
 
-## Глава 2, День 1
+## Квесты
+
+### Глава 2, День 1
 
 1. Развернуть контракт с именем "JacobTucker" по адресу `0x03`:
     - контракт должен содержать константу `is` типа `String`;
@@ -469,7 +473,7 @@ transaction(параметры) {
 
 [Flow Playground](https://play.onflow.org/81e22fae-ed74-4c83-b03c-6c073e49f313?type=script&id=920766ab-1890-4618-9f81-aab06717eafa&storage=none)
 
-## Глава 2, День 2
+### Глава 2, День 2
 
 1. Создать контракт, содержащий:
 	 - переменную `myNumber` типа `Int` (проинициализировать нулём);
@@ -479,7 +483,7 @@ transaction(параметры) {
 
 [Flow Playground](https://play.onflow.org/b60be3e3-10df-473d-90d6-f5b0df0a182f?type=tx&id=94e1736a-d30e-4b79-bc12-2f2fc52a1d9d&storage=none)
 
-## Глава 2, День 3
+### Глава 2, День 3
 
 1. В скрипте инициализировать массив длины 3, хранящий любимых людей, представленных типом `String`, и вывести их на экран.
 2. В скрипте инициализировать словарь, где ключам соответствуют: *Facebook*, *Instagram*, *Twitter*, *YouTube*, *Reddit* и *LinkedIn* с типом `String`, а значениям соответствуют числа типа `UInt64` обозначающие частоту использования платформы (0 - если не использовалась).
@@ -498,7 +502,7 @@ transaction(параметры) {
 
 [Flow Playground](https://play.onflow.org/d5b840bf-2374-4779-82d8-c7ec9c86780f?type=script&id=b4d91a5b-7317-4359-8a1c-f5e335ed685c&storage=none)
 
-## Глава 2, День 4
+### Глава 2, День 4
 
 1. Создать контракт и объявить в нём структуру на свой выбор.
 2. Объявить массив или словарь структур.
@@ -508,7 +512,7 @@ transaction(параметры) {
 
 [Flow Playground](https://play.onflow.org/21078363-d042-46df-b981-5112593d8846?type=account&id=23e25429-0751-4373-844a-13e84822e575&storage=none)
 
-## Глава 3, День 1
+### Глава 3, День 1
 
 Найти и исправить 4 ошибки:
 
@@ -531,7 +535,7 @@ pub contract Test {
 
 [Flow Playground](https://play.onflow.org/77d2e459-2bcc-4476-bf88-9a88e2b49bf1?type=account&id=b63f751e-71da-4e37-98c7-06e2dc9d3fb4&storage=none)
 
-## Глава 3, День 2-3
+### Глава 3, День 2-3
 
 1. Создать контракт, содержащий массив ресурсов и словарь ресурсов.
 2. Для массива и словаря создать по паре функций: добавления и удаления ресурса.
@@ -539,7 +543,7 @@ pub contract Test {
 
 [Flow Playground](https://play.onflow.org/1128961f-c703-4586-9fe4-8c5c2ff1549c?type=account&id=272ced8f-6145-4152-ab97-63a9ec7b02b3&storage=none)
 
-## Глава 3, День 4
+### Глава 3, День 4
 
 1. Создать контракт содержащий:
 
@@ -586,7 +590,7 @@ pub contract Test {
 
 [Flow Playground](https://play.onflow.org/6ff14320-0de1-4d19-8861-78e170448848?type=account&id=034dfea5-e3bb-4e41-a071-c308110202b0&storage=none)
 
-## Глава 3, День 5
+### Глава 3, День 5
 
 Для каждой из четырёх зон написать:
 1. какие из переменные из `a`, `b`, `c` и `d` могут быть там прочитаны;
@@ -665,7 +669,7 @@ pub fun main() {
 
 [Flow Playground](https://play.onflow.org/3fc21783-1472-4174-bde7-ab778896fb4e?type=script&id=b103c6d2-f0a4-41ec-ba62-203df278237c&storage=none)
 
-## Глава 4, День 1
+### Глава 4, День 1
 
 Создать контракт, содержащий:
 
@@ -679,7 +683,7 @@ pub fun main() {
 
 [Flow Playground](https://play.onflow.org/d5e88ce9-e084-428e-af65-1a1a3753ca35)
 
-## Глава 4, День 2
+### Глава 4, День 2
 
 1. Создать контракт, содержащий ресурс, который реализует некоторый интерфейс.
 2. Написать транзакцию, которая сохраняет ресурс и связывает его с публичным ограничивающим интерфейсом.
@@ -687,6 +691,266 @@ pub fun main() {
 4. Прочитать публичное поле и вернуть его из скрипта.
 
 [Flow Playground](https://play.onflow.org/e84b2db7-71fa-4127-bf99-eeda49212035)
+
+## Создаём собственный NFT смарт-контракт
+
+### Глава 4, День 3
+
+Немного о деталях реализации:
+ - Контракт будет отображать некоторую коллекцию NFT (в нашем случае "CryptoPoops")
+ - Токен NFT будет является ресурсом, что логично, потому мы не хотим, чтобы его случайно можно было скопировать или потерять.
+
+```swift
+pub contract CryptoPoops {
+    // общее кол-во NFT
+    pub var totalSupply: UInt64
+
+    // ресурс, представляющий NFT
+    pub resource NFT {
+        // уникальный id
+        pub let id: UInt64
+
+        init() {
+            // каждый ресурс имеет собственный уникальный uuid
+            self.id = self.uuid
+        }
+    }
+
+    // функция создания NFT
+    pub fun createNFT(): @NFT {
+        return <- create NFT()
+    }
+
+    // инициализация
+    init() {
+        self.totalSupply = 0
+    }
+}
+```
+
+Хорошо, давайте теперь сохраним себе NFT и сделаем его публичным для чтения.
+
+```swift
+import CryptoPoops from 0x01
+
+transaction() {
+    prepare(signer: AuthAccount) {
+        // сохраняем
+        signer.save(<- CryptoPoops.createNFT(), to: /storage/MyNFT)
+
+        // делаем общедоступным
+        signer.link<&CryptoPoops.NFT>(/public/MyNFT, target: /storage/MyNFT)
+    }
+}
+```
+
+Попробуем теперь прочитать информацию из аккаунта.
+
+```swift
+import CryptoPoops from 0x01
+
+pub fun main(address: Address): UInt64 {
+    let nft = getAccount(address)               // получаем PublicAccount
+        .getCapability(/public/MyNFT)           // получаем Capability для нашей NFT
+        .borrow<&CryptoPoops.NFT>()             // берём ссылку на NFT
+        ?? panic("An NFT does not exist here.") // паникуем, если NFT нет
+
+    return nft.id                               // возвращаем id
+}
+```
+
+Мы сделали NFT и научились сохранять его к себе, но в такой реализации есть один существенный минус: мы можем сохранить к себе только один NFT, так как по некоторому пути в `/storage/` может храниться только один ресурс.
+
+Чтобы решить эту проблему, давайте создадим ресурс, который будет отвечать за хранение NFT.
+
+```swift
+pub contract CryptoPoops {
+    ...
+
+    pub resource Collection {
+        // в этом словаре будут хранится наши NFT
+        pub var ownedNFTs: @{UInt64: NFT}
+
+        // добавление NFT в коллекцию
+        pub fun deposit(token: @NFT) {
+            self.ownedNFTs[token.id] <-! token
+        }
+
+        // извлечение NFT из коллекции по ID
+        pub fun withdraw(withdrawID: UInt64): @NFT {
+            let nft <- self.ownedNFTs.remove(key: withdrawID) 
+                ?? panic("This NFT does not exist in this Collection.")
+            return <- nft
+        }
+
+        // возвращает все ID тех NFT, что хранятся в коллекции
+        pub fun getIDs(): [UInt64] {
+            return self.ownedNFTs.keys
+        }
+
+        // инициализация
+        init() {
+            self.ownedNFTs <- {}
+        }
+
+        // уничтожение коллекции 
+        destroy() {
+            destroy self.ownedNFTs
+        }
+    }
+
+    // создание пустого словаря
+    pub fun createEmptyCollection(): @Collection {
+        return <- create Collection()
+    }
+
+    ...
+}
+```
+
+❗ Перед удалением коллекции нам необходимо удалить все содержащиеся в ней NFT. Иначе NFT будут утеряны, и мы не сможем с ними ничего сделать.
+
+Конструкция `destroy() { destroy self.ownedNFTs }` сообщает, что при удалении коллекции будут удалены NFT. И это необходимо делать с любыми вложенными ресурсами.
+
+Теперь создадим коллекцию и сделаем её доступной для публики.
+
+```swift
+import CryptoPoops from 0x01
+
+transaction() {
+    prepare(signer: AuthAccount) {
+        signer.save(<- CryptoPoops.createEmptyCollection(), to: /storage/MyCollection)
+        signer.link<&CryptoPoops.Collection>(/public/MyCollection, target: /storage/MyCollection)
+    }
+}
+```
+
+Теперь каждый может посмотреть, какие есть NFT в коллекций, сделать депозит или вывести. И вот последнее нас не очень радует (мы же не хотим, чтобы наши NFT мог вывести кто угодно?). Тут на помощь придут интерфейсы и ограниченные типы.
+
+```swift
+pub contract CryptoPoops {
+    ...
+
+    // общедоступный интерфейс
+    pub resource interface CollectionPublic {
+        pub fun deposit(token: @NFT)
+        pub fun getIDs(): [UInt64]
+    }
+
+    pub resource Collection: CollectionPublic { ... }
+
+    ...
+}
+```
+
+Таким образом, никто, кроме нас, не сможет выводить NFT из коллекции.
+
+```swift
+import CryptoPoops from 0x01
+
+transaction() {
+    prepare(signer: AuthAccount) {
+        signer.save(<- CryptoPoops.createEmptyCollection(), to: /storage/MyCollection)
+
+        signer.link<&CryptoPoops.Collection{CryptoPoops.CollectionPublic}>(
+            /public/MyCollection,
+            target: /storage/MyCollection
+        )
+    }
+}
+```
+
+Поэкспериментируем с нашим контрактом:
+
+1. Попробуем добавить и вывести NFT из своей коллекции.
+
+    ```swift
+    import CryptoPoops from 0x01
+
+    transaction() {
+        prepare(signer: AuthAccount) {
+            // получаем ссылку на свою коллекцию
+            let collection = signer.borrow<&CryptoPoops.Collection>(from: /storage/MyCollection)
+
+            // делаем депозит
+            collection.deposit(token: <- CryptoPoops.createNFT())
+
+            // проверяем, что NFT сохранена в коллекции
+            log(collection.getIDs()) // [2353]
+
+            // выводим NFT
+            let nft <- collection.withdraw(withdrawID: 2353)
+
+            // проверяем, что в коллекции ничего не осталось
+            log(collection.getIDs()) // []
+
+            // уничтожаем NFT
+            destroy nft
+        }
+    }
+    ```
+
+2. Попробуем отправить кому-то NFT.
+
+    ```swift
+    import CryptoPoops from 0x01
+
+    // транзакция имеет параметр - адрес получателя
+    transaction(recipient: Address) {
+        prepare(otherPerson: AuthAccount) {
+            // получаем ссылку на публичный интерфейс чужой коллекции
+            let recipientsCollection = getAccount(recipient)
+                .getCapability(/public/MyCollection)
+                .borrow<&CryptoPoops.Collection{CryptoPoops.CollectionPublic}>()
+                ?? panic("The recipient does not have a Collection.")
+
+            // делаем депозит
+            recipientsCollection.deposit(token: <- CryptoPoops.createNFT())
+        }
+    }
+    ```
+
+3. Попробуем вывести у кого-то NFT.
+
+    ```swift
+    import CryptoPoops from 0x01
+
+    transaction(recipient: Address, withdrawID: UInt64) {
+        prepare(otherPerson: AuthAccount) {
+            // получаем ссылку на публичный интерфейс чужой коллекции
+            let recipientsCollection = getAccount(recipient)
+                .getCapability(/public/MyCollection)
+                .borrow<&CryptoPoops.Collection{CryptoPoops.CollectionPublic}>()
+                ?? panic("The recipient does not have a Collection.")
+
+            // Ошибка: "Member of restricted type is not accessible: withdraw"
+            let token <- recipientsCollection.withdraw(withdrawID: withdrawID)
+
+            destroy token
+        }
+    }
+    ```
+
+4. Прочитаем информацию о NFT.
+
+    ```swift
+    import CryptoPoops from 0x01
+
+    pub fun main(address: Address): [UInt64] {
+        let publicCollection = getAccount(address)
+            .getCapability(/public/MyCollection)
+            .borrow<&CryptoPoops.Collection{CryptoPoops.CollectionPublic}>()
+            ?? panic("The address does not have a Collection.")
+
+        return publicCollection.getIDs() // [2353]
+    }
+    ```
+
+Вот мы и сделали наш NFT смарт-контракт. Как обычно весь код тут:
+
+[Flow Playground](https://play.onflow.org/4a49bf7b-2b3a-4f13-8f9f-9bcd5b7669ee)
+
+В следующей части мы разработаем логику минтинга NFT, так как на текущий момент минтить токены может каждый, что не очень правильно.
 
 # Литература
 
