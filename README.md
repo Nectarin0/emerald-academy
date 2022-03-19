@@ -13,6 +13,8 @@
    - [Ссылки](#ссылки)
    - [Интерфейсы](#интерфейсы)
    - [Контроль доступа](#контроль-доступа)
+   - [Пред/пост условия](#предпост-условия)
+   - [События](#события)
    - [Скрипты](#скрипты)
    - [Транзакции](#транзакции)
    - [Аккаунты](#аккаунты)
@@ -32,6 +34,8 @@
 Глава 3: [Ресурсы](#ресурсы) -> [Ссылки](#ссылки) -> [Интерфейсы](#интерфейсы) -> [Контроль доступа](#контроль-доступа)
 
 Глава 4: [Хранилище аккаунта](#хранилище-аккаунта) ([Раздел `/storage/`](#раздел-storage)) -> [Хранилище аккаунта](#хранилище-аккаунта) ([Разделы `/public/` и `/private/`](#разделы-public-и-private))
+
+Глава 5: [Пред/пост условия](#предпост-условия) & [События](#события)
 
 # Изучение Концепций Блокчейна
 
@@ -356,6 +360,85 @@ pub contract Stuff {
 	Зона записи: Текущая и вложенные
 
 [Подробнее](https://docs.onflow.org/cadence/language/access-control/)
+
+## Пред/пост условия
+
+Пред/пост условия позволяют делать проверки перед/после выполнения функции. Такие проверки несут дополнительный слой безопасности.
+
+Также предусловия позволяют уменьшить комиссию. Так как за каждую операцию приходится платить, то чем раньше мы поймем, что двигаться дальше нет смысла, тем мы больше сэкономим комиссионных.
+
+Пример с предусловием:
+
+```swift
+pub contract Test {
+
+    pub fun logName(name: String) {
+        // этот блок и есть предусловие
+        pre {
+            // условие должно быть истинным, иначе выполнение
+            // прервется с сообщением об ошибке после двоеточия
+            name.length > 0: "This name is too short."
+        }
+
+        // основной код функции
+        log(name)
+    }
+}
+```
+
+Пример чуть посложнее с постусловием:
+
+```swift
+pub contract Test {
+    pub var number: Int
+
+    pub fun updateNumber(): Int {
+        // блок постусловия
+        post {
+            // с помощью before мы можем получить значение
+            // переменной до выполнения функции
+            before(self.number) == self.number - 1
+            // result - автоматическая переменная, которая
+            // равна возвращаемому значению функции
+            before(self.number) == result
+        }
+        
+        let old_number = self.number;
+        self.number = self.number + 1
+        return old_number
+    }
+
+    init() {
+        self.number = 0
+    }
+}
+```
+
+❗ Важно понимать, что прерывание транзакции отменяет все изменения состояния, что были сделаны функцией до ошибки.
+
+## События
+
+События - это способ смарт-контракта сообщить внешнему миру о том, что что-то произошло.
+
+Например, если мы минтим NFT и хотим, чтобы внешний мир знал об этом, мы транслируем событие. И те, кто хотел получить оповещение, получат его. Это куда эффективней, чем бесконечно проверять, изменилось ли состояние.
+
+```swift
+pub contract Test {
+    // объявляем событие
+    pub event NFTMinted(id: UInt64)
+
+    pub resource NFT {
+        pub let id: UInt64
+
+        init() {
+            self.id = self.uuid
+
+            // транслируем событие при создании
+            emit NFTMinted(id: self.id)
+        }
+    }
+}
+```
 
 ## Скрипты
 
@@ -692,6 +775,60 @@ pub fun main() {
 
 [Flow Playground](https://play.onflow.org/e84b2db7-71fa-4127-bf99-eeda49212035)
 
+### Глава 5, День 1
+
+1. Развернуть контракт, создать событие на свой выбор и транслировать его, указав, что произошло. Добавить пред/пост условия.
+2. Для каждой из приведенных ниже функций ответить на вопросы.
+
+    ```swift
+    pub contract Test {
+
+        // Напечатает ли эта функция `name`?
+        // name: 'Jacob'
+        pub fun numberOne(name: String) {
+            pre {
+                name.length == 5: "This name is not cool enough."
+            }
+
+            log(name)
+        }
+
+        // Вернёт ли значение эта функция?
+        // name: 'Jacob'
+        pub fun numberTwo(name: String): String {
+            pre {
+                name.length >= 0: "You must input a valid name."
+            }
+            post {
+                result == "Jacob Tucker"
+            }
+
+            return name.concat(" Tucker")
+        }
+
+        pub resource TestResource {
+            pub var number: Int
+
+            // Изменится ли значение `number` после выполнения функции?
+            // И какое значение будет?
+            pub fun numberThree(): Int {
+                post {
+                    before(self.number) == result + 1
+                }
+
+                self.number = self.number + 1
+                return self.number
+            }
+
+            init() {
+                self.number = 0
+            }
+        }
+    }
+    ```
+
+[Flow Playground](https://play.onflow.org/54c1bc56-7cf9-4001-8705-28680f3ddfde)
+
 ## Создаём собственный NFT смарт-контракт
 
 ### Глава 4, День 3
@@ -965,7 +1102,7 @@ transaction(id: UInt64, recipient: Address) {
         let signersCollection = signer.borrow<&CryptoPoops.Collection>(from: /storage/MyCollection)
             ?? panic("Signer does not have a CryptoPoops Collection")
 
-        // получаем ссылку на коллекцию
+        // получаем ссылку на коллекцию получателя
         let recipientsCollection = getAccount(recipient)
             .getCapability(/public/MyCollection)
             .borrow<&CryptoPoops.Collection{CryptoPoops.CollectionPublic}>()
